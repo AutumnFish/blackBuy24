@@ -21,6 +21,11 @@ import axios from 'axios'
 // 设置到Vue的原型上 那么所有Vue实例化出来的对象 和组件都能够共享这个属性
 // 一般来说 设置到原型上的 属性 Vue中 会使用$作为前缀 用来区分普通的属性
 Vue.prototype.$axios = axios;
+// 使用axios的方式设置基础地址
+axios.defaults.baseURL = 'http://111.230.232.110:8899/';
+
+// 抽取基础地址
+// Vue.prototype.$baseUrl = 'http://111.230.232.110:8899/'
 
 // 导入 路由
 import VueRouter from "vue-router";

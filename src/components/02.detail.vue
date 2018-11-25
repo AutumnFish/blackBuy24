@@ -85,11 +85,11 @@
                                         </div>
                                         <div class="conn-box">
                                             <div class="editor">
-                                                <textarea id="txtContent" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
+                                                <textarea v-model.trim="comment" id="txtContent" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                             <div class="subcon">
-                                                <input id="btnSubmit" name="submit" type="submit" value="提交评论" class="submit">
+                                                <input @click="submitComment" id="btnSubmit" name="submit" type="submit" value="提交评论" class="submit">
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                         </div>
@@ -112,7 +112,7 @@
                                     </ul>
                                     <div class="page-box" style="margin: 5px 0px 0px 62px;">
                                         <!-- 使用iView的分页组件 -->
-                                        <Page :total="totalcount" show-sizer show-elevator @on-change="pageChange" placement="top" :page-size-opts="[6,8,12]" :page-size="pageSize" />
+                                        <Page :total="totalcount" show-sizer show-elevator @on-page-size-change="sizeChange" @on-change="pageChange" placement="top" :page-size-opts="[6,8,12]" :page-size="pageSize" />
                                     </div>
                                 </div>
                             </div>
@@ -180,7 +180,9 @@ export default {
       // 评论内容
       comments: [],
       // 总评论数
-      totalcount: 0
+      totalcount: 0,
+      // 评论内容
+      comment:''
     };
   },
   // 事件
@@ -231,6 +233,42 @@ export default {
       this.pageIndex = pageIndex;
       // 重新获取这一页的数据
       this.getComments();
+    },
+    // 页容量改变
+    sizeChange(pageSize){
+        // console.log(pageSize);
+        this.pageSize = pageSize;
+        // 重新获取评论数据即可
+        this.getComments();
+    },
+    // 发表评论
+    submitComment(){
+        // 非空判断
+        if(this.comment==''){
+            // 如果为空
+            this.$Message.warning('请输入评论内容再发布');
+        }else{
+            // 有内容
+            this.$axios.post(`site/validate/comment/post/goods/${this.artID}`,{
+                commenttxt:this.comment
+            }).then(result=>{
+                // console.log(result)
+                // 判断是否成功
+                if(result.data.status==0){
+                    // 提示用户
+                    this.$Message.success(result.data.message);
+                    // 清空评论
+                    this.comment = '';
+                    // 初始化页面为 1 才能看到自己的评论
+                    this.pageIndex = 1;
+                    // 重新获取评论
+                    this.getComments();
+
+                }else{
+
+                }
+            })
+        }
     }
   },
   // 生命周期函数
