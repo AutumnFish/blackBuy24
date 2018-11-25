@@ -15,6 +15,10 @@ import 'iview/dist/styles/iview.css';
 // 注册到Vue上
 Vue.use(iView);
 
+// 放大镜组件
+import ProductZoomer from 'vue-product-zoomer'
+Vue.use(ProductZoomer)
+
 // 导入 axios
 // 类似于 vue-resource this.$http
 import axios from 'axios'

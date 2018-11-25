@@ -3,8 +3,8 @@
         <div class="section">
             <div class="location">
                 <span>当前位置：</span>
-                <a href="/index.html">首页</a> &gt;
-                <a href="/goods.html">购物商城</a> &gt;
+                <a href="/index.html">首页</a>&gt;
+                <a href="/goods.html">购物商城</a>&gt;
                 <a href="/goods/42/1.html">商品详情</a>
             </div>
         </div>
@@ -13,7 +13,13 @@
                 <div class="wrap-box">
                     <div class="left-925">
                         <div class="goods-box clearfix">
-                            <div class="pic-box"></div>
+                            <div class="pic-box">
+                                <!-- 放大镜组件 -->
+                                <ProductZoomer v-if="images.normal_size.length!=0"
+                                    :base-images="images"
+                                    :base-zoomer-options="zoomerOptions"
+                                />
+                            </div>
                             <div class="goods-spec">
                                 <h1>{{goodsinfo.title}}</h1>
                                 <p class="subtitle">{{goodsinfo.sub_title}}</p>
@@ -31,7 +37,10 @@
                                     <dl>
                                         <dt>销售价</dt>
                                         <dd>
-                                            <em id="commoditySellPrice" class="price">¥{{goodsinfo.sell_price}}</em>
+                                            <em
+                                                id="commoditySellPrice"
+                                                class="price"
+                                            >¥{{goodsinfo.sell_price}}</em>
                                         </dd>
                                     </dl>
                                 </div>
@@ -41,19 +50,31 @@
                                         <dd>
                                             <div class="stock-box">
                                                 <!-- 绑定了数据  @change 改变 :min 最小值 :max 最大值  -->
-                                                <el-input-number v-model="buyCount" :min="1" :max="goodsinfo.stock_quantity"></el-input-number>
+                                                <el-input-number
+                                                    v-model="buyCount"
+                                                    :min="1"
+                                                    :max="goodsinfo.stock_quantity"
+                                                ></el-input-number>
                                             </div>
                                             <span class="stock-txt">
                                                 库存
-                                                <em id="commodityStockNum">{{goodsinfo.stock_quantity}}</em>件
+                                                <em
+                                                    id="commodityStockNum"
+                                                >{{goodsinfo.stock_quantity}}</em>件
                                             </span>
                                         </dd>
                                     </dl>
                                     <dl>
                                         <dd>
                                             <div id="buyButton" class="btn-buy">
-                                                <button onclick="cartAdd(this,'/',1,'/shopping.html');" class="buy">立即购买</button>
-                                                <button onclick="cartAdd(this,'/',0,'/cart.html');" class="add">加入购物车</button>
+                                                <button
+                                                    onclick="cartAdd(this,'/',1,'/shopping.html');"
+                                                    class="buy"
+                                                >立即购买</button>
+                                                <button
+                                                    onclick="cartAdd(this,'/',0,'/cart.html');"
+                                                    class="add"
+                                                >加入购物车</button>
                                             </div>
                                         </dd>
                                     </dl>
@@ -63,20 +84,35 @@
                         <div id="goodsTabs" class="goods-tab bg-wrap">
                             <!-- 使用图钉 吸附顶部 -->
                             <Affix>
-                                <div id="tabHead" class="tab-head" style="position: static; top: 517px; width: 925px;">
+                                <div
+                                    id="tabHead"
+                                    class="tab-head"
+                                    style="position: static; top: 517px; width: 925px;"
+                                >
                                     <ul>
                                         <li>
-                                            <a href="javascript:;" @click="tabIndex=0" :class="{selected:tabIndex==0}">商品介绍</a>
+                                            <a
+                                                href="javascript:;"
+                                                @click="tabIndex=0"
+                                                :class="{selected:tabIndex==0}"
+                                            >商品介绍</a>
                                         </li>
                                         <li>
-                                            <a href="javascript:;" @click="tabIndex=1" :class="{selected:tabIndex==1}">商品评论</a>
+                                            <a
+                                                href="javascript:;"
+                                                @click="tabIndex=1"
+                                                :class="{selected:tabIndex==1}"
+                                            >商品评论</a>
                                         </li>
                                     </ul>
                                 </div>
                             </Affix>
                             <!-- 渲染为html结构 -->
-                            <div class="tab-content entry" v-html="goodsinfo.content" v-show="tabIndex==0">
-                            </div>
+                            <div
+                                class="tab-content entry"
+                                v-html="goodsinfo.content"
+                                v-show="tabIndex==0"
+                            ></div>
                             <div class="tab-content" v-show="tabIndex==1">
                                 <div class="comment-box">
                                     <div id="commentForm" name="commentForm" class="form-box">
@@ -85,17 +121,34 @@
                                         </div>
                                         <div class="conn-box">
                                             <div class="editor">
-                                                <textarea v-model.trim="comment" id="txtContent" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
+                                                <textarea
+                                                    v-model.trim="comment"
+                                                    id="txtContent"
+                                                    name="txtContent"
+                                                    sucmsg=" "
+                                                    data-type="*10-1000"
+                                                    nullmsg="请填写评论内容！"
+                                                ></textarea>
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                             <div class="subcon">
-                                                <input @click="submitComment" id="btnSubmit" name="submit" type="submit" value="提交评论" class="submit">
+                                                <input
+                                                    @click="submitComment"
+                                                    id="btnSubmit"
+                                                    name="submit"
+                                                    type="submit"
+                                                    value="提交评论"
+                                                    class="submit"
+                                                >
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                         </div>
                                     </div>
                                     <ul id="commentList" class="list-box">
-                                        <p v-show="totalcount==0" style="margin: 5px 0px 15px 69px; line-height: 42px; text-align: center; border: 1px solid rgb(247, 247, 247);">暂无评论，快来抢沙发吧！</p>
+                                        <p
+                                            v-show="totalcount==0"
+                                            style="margin: 5px 0px 15px 69px; line-height: 42px; text-align: center; border: 1px solid rgb(247, 247, 247);"
+                                        >暂无评论，快来抢沙发吧！</p>
                                         <!-- 评论内容 -->
                                         <li v-for="(item, index) in comments" :key="item.id">
                                             <div class="avatar-box">
@@ -112,7 +165,17 @@
                                     </ul>
                                     <div class="page-box" style="margin: 5px 0px 0px 62px;">
                                         <!-- 使用iView的分页组件  设置当前页 -->
-                                        <Page  :current="pageIndex" :total="totalcount" show-sizer show-elevator @on-page-size-change="sizeChange" @on-change="pageChange" placement="top" :page-size-opts="[6,8,12]" :page-size="pageSize" />
+                                        <Page
+                                            :current="pageIndex"
+                                            :total="totalcount"
+                                            show-sizer
+                                            show-elevator
+                                            @on-page-size-change="sizeChange"
+                                            @on-change="pageChange"
+                                            placement="top"
+                                            :page-size-opts="[6,8,12]"
+                                            :page-size="pageSize"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -133,14 +196,11 @@
                                         </div>
                                         <div class="txt-box">
                                             <!-- <a href="#/site/goodsinfo/90" class=""> -->
-                                            <router-link :to="'/detail/'+item.id">
-                                                {{item.title}}
-                                            </router-link>
+                                            <router-link :to="'/detail/'+item.id">{{item.title}}</router-link>
                                             <!-- </a> -->
                                             <span>{{item.add_time | shortTime}}</span>
                                         </div>
                                     </li>
-
                                 </ul>
                             </div>
                         </div>
@@ -149,7 +209,9 @@
             </div>
         </div>
         <!-- 返回顶部 -->
-        <BackTop> <span>🚀</span> </BackTop>
+        <BackTop>
+            <span>🚀</span>
+        </BackTop>
     </div>
 </template>
 <script>
@@ -182,7 +244,23 @@ export default {
       // 总评论数
       totalcount: 0,
       // 评论内容
-      comment:''
+      comment: "",
+      // 放大镜数据
+      images: {
+        // required
+        normal_size: [
+        ]
+      },
+      // 放大镜的设置
+      zoomerOptions: {
+        zoomFactor: 8,
+        pane: "container-round",
+        hoverDelay: 300,
+        namespace: "inline-zoomer",
+        move_by_click: true,
+        scroll_items: 5,
+        choosed_thumb_border_color: "#bbdefb"
+      }
     };
   },
   // 事件
@@ -206,9 +284,18 @@ export default {
           this.hotgoodslist = result.data.message.hotgoodslist;
           //   图片列表
           this.imglist = result.data.message.imglist;
+          // 设置给 放大镜的数据即可
+          this.images.normal_size = [];
+          // 循环添加数据
+          this.imglist.forEach(v=>{
+              this.images.normal_size.push({
+                  id:v.id,
+                  url:v.original_path
+              })
+          })
         });
-        // 调用获取评论的方法
-        this.getComments();
+      // 调用获取评论的方法
+      this.getComments();
     },
     // 获取评论数据
     getComments() {
@@ -229,46 +316,46 @@ export default {
     },
     // 页码改变
     pageChange(pageIndex) {
-    //   console.log(pageSize);
+      //   console.log(pageSize);
       this.pageIndex = pageIndex;
       // 重新获取这一页的数据
       this.getComments();
     },
     // 页容量改变
-    sizeChange(pageSize){
-        // console.log(pageSize);
-        this.pageSize = pageSize;
-        // 重新获取评论数据即可
-        this.getComments();
+    sizeChange(pageSize) {
+      // console.log(pageSize);
+      this.pageSize = pageSize;
+      // 重新获取评论数据即可
+      this.getComments();
     },
     // 发表评论
-    submitComment(){
-        // 非空判断
-        if(this.comment==''){
-            // 如果为空
-            this.$Message.warning('请输入评论内容再发布');
-        }else{
-            // 有内容
-            this.$axios.post(`site/validate/comment/post/goods/${this.artID}`,{
-                commenttxt:this.comment
-            }).then(result=>{
-                // console.log(result)
-                // 判断是否成功
-                if(result.data.status==0){
-                    // 提示用户
-                    this.$Message.success(result.data.message);
-                    // 清空评论
-                    this.comment = '';
-                    // 初始化页面为 1 才能看到自己的评论
-                    this.pageIndex = 1;
-                    // 重新获取评论
-                    this.getComments();
-
-                }else{
-
-                }
-            })
-        }
+    submitComment() {
+      // 非空判断
+      if (this.comment == "") {
+        // 如果为空
+        this.$Message.warning("请输入评论内容再发布");
+      } else {
+        // 有内容
+        this.$axios
+          .post(`site/validate/comment/post/goods/${this.artID}`, {
+            commenttxt: this.comment
+          })
+          .then(result => {
+            // console.log(result)
+            // 判断是否成功
+            if (result.data.status == 0) {
+              // 提示用户
+              this.$Message.success(result.data.message);
+              // 清空评论
+              this.comment = "";
+              // 初始化页面为 1 才能看到自己的评论
+              this.pageIndex = 1;
+              // 重新获取评论
+              this.getComments();
+            } else {
+            }
+          });
+      }
     }
   },
   // 生命周期函数
@@ -282,6 +369,8 @@ export default {
       //   console.log('数据变了');
       // 重新获取数据即可
       //   this.created();
+      // 设置 图片数组为空 让放大镜组件 重新生成
+      this.images.normal_size = [];
       // 初始化数据
       this.initData();
     }
@@ -297,5 +386,13 @@ export default {
   font-size: 100px;
   display: block;
   transform: rotateZ(-45deg);
+}
+.inline-zoomer-zoomer-box{
+    width: 395px;
+    /* height: 320px; */
+}
+.thumb-list img{
+    width: 100px;
+    height: 100px;
 }
 </style>
