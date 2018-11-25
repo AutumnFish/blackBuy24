@@ -111,8 +111,8 @@
                                         </li>
                                     </ul>
                                     <div class="page-box" style="margin: 5px 0px 0px 62px;">
-                                        <!-- 使用iView的分页组件 -->
-                                        <Page :total="totalcount" show-sizer show-elevator @on-page-size-change="sizeChange" @on-change="pageChange" placement="top" :page-size-opts="[6,8,12]" :page-size="pageSize" />
+                                        <!-- 使用iView的分页组件  设置当前页 -->
+                                        <Page  :current="pageIndex" :total="totalcount" show-sizer show-elevator @on-page-size-change="sizeChange" @on-change="pageChange" placement="top" :page-size-opts="[6,8,12]" :page-size="pageSize" />
                                     </div>
                                 </div>
                             </div>
