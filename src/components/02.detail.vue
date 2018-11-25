@@ -72,7 +72,7 @@
                                                     class="buy"
                                                 >立即购买</button>
                                                 <button
-                                                    onclick="cartAdd(this,'/',0,'/cart.html');"
+                                                    @click="add2Cart"
                                                     class="add"
                                                 >加入购物车</button>
                                             </div>
@@ -356,6 +356,17 @@ export default {
             }
           });
       }
+    },
+    // 加入购物车
+    add2Cart(){
+        // 获取商品id
+        // 获取购买数量
+
+        // 提交载荷
+        this.$store.commit('add2Cart',{
+            goodId:this.artID,
+            goodNum:this.buyCount
+        })
     }
   },
   // 生命周期函数

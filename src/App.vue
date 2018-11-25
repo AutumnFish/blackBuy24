@@ -23,15 +23,16 @@
                             <a>退出</a>
                             <strong>|</strong>
                         </span>
-                        <a href="" class="">
+                        <!-- <a href="" class=""> -->
+                        <router-link to="/shopCart">
                             <i class="iconfont icon-cart"></i>购物车(
                             <span id="shoppingCartCount">
-                                <span>4</span>
-                            </span>)</a>
+                                <span>{{$store.getters.totalCount}}</span>
+                            </span>)
+                        </router-link>
                     </div>
                 </div>
             </div>
-
             <!-- 2.0 导航条 -->
             <div class="head-nav">
                 <div class="section">
@@ -65,7 +66,7 @@
                                 </a>
                             </li>
                             <li class="goods">
-                                <a href="" class="router-link-exact-active ">
+                                <a href="" class="router-link-exact-active">
                                     <span class="out" style="top: 0px;">购物商城</span>
                                 </a>
                             </li>
@@ -73,7 +74,14 @@
                     </div>
                     <div class="search-box">
                         <div class="input-box">
-                            <input id="keywords" name="keywords" type="text" onkeydown="if(event.keyCode==13){};" placeholder="输入关健字" x-webkit-speech="">
+                            <input
+                                id="keywords"
+                                name="keywords"
+                                type="text"
+                                onkeydown="if(event.keyCode==13){};"
+                                placeholder="输入关健字"
+                                x-webkit-speech
+                            >
                         </div>
                         <a href="javascript:;">
                             <i class="iconfont icon-search"></i>
@@ -104,14 +112,17 @@
                 </div>
                 <div class="foot-box">
                     <div class="copyright">
-                        <p>版权所有 黑马买买买 </p>
+                        <p>版权所有 黑马买买买</p>
                         <p>公司地址： 联系电话：</p>
-                        <p class="gray">Copyright © 2009-2018 itcast Corporation,All Rights Reserved.</p>
+                        <p
+                            class="gray"
+                        >Copyright © 2009-2018 itcast Corporation,All Rights Reserved.</p>
                     </div>
                     <div class="service">
                         <p>周一至周日 9:00-24:00</p>
                         <a href="#">
-                            <i class="iconfont icon-phone"></i>在线客服</a>
+                            <i class="iconfont icon-phone"></i>在线客服
+                        </a>
                     </div>
                 </div>
             </div>
@@ -121,10 +132,13 @@
 
 <script>
 export default {
-  name: "app"
+  name: "app",
+  created() {
+    console.log(this.$store.state.count);
+  }
 };
 </script>
 
 <style>
-    /* 这里引入 全局css 也可以 */
+/* 这里引入 全局css 也可以 */
 </style>
