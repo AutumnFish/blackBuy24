@@ -42,6 +42,7 @@ import "./assets/site/css/style.css";
 import index from "./components/index.vue";
 import detail from "./components/02.detail.vue";
 import shopCart from "./components/03.shopCart.vue";
+import order from "./components/04.order.vue";
 
 // 写路由规则
 let routes = [
@@ -63,12 +64,40 @@ let routes = [
   {
     path: "/shopCart",
     component: shopCart
+  },
+  // 去订单确认页面
+  {
+    path: "/order",
+    component: order
   }
 ];
 
 // 实例化路由对象
 let router = new VueRouter({
   routes
+});
+
+// 增加导航守卫 回调函数(每次路由改变的时候 触发)
+router.beforeEach((to, from, next) => {
+  console.log("守卫啦!!!!");
+  // console.log(to);
+  // console.log(from);
+  if (to.path == "/order") {
+    // 正要去订单页
+    // 必须先判断登录
+    axios.get("site/account/islogin").then(result => {
+      //   console.log(result);
+      if (result.data.code == "nologin") {
+        // 提示用户
+        Vue.prototype.$Message.warning("请先登录");
+        // 跳转页面(路由)
+        router.push("/index");
+      }
+    });
+  } else {
+    // next 如果不执行 就不会路由跳转
+    next();
+  }
 });
 
 // 注册全局过滤器 方便使用
@@ -168,14 +197,14 @@ const store = new Vuex.Store({
     },
     // 删除某一条数据的方法
     // 已经被 watch中的代码 实现  只是为了 演示 Vue.delete这个方法
-    delGoodsById(state,id){
+    delGoodsById(state, id) {
       // console.log(id);
       // 根据id 删除state中的数据
       // delete state.cartData[id];
       // delete 删除的属性 Vue无法跟踪
       // 参数1 对象 参数2 删除的属性
       // 必须使用Vue.delete才可以同步更新视图
-      Vue.delete(state.cartData,id)
+      Vue.delete(state.cartData, id);
     }
   }
 });
