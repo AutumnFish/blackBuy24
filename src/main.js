@@ -10,23 +10,23 @@ import "element-ui/lib/theme-chalk/index.css";
 Vue.use(ElementUI);
 
 // 导入IView框架
-import iView from 'iview';
-import 'iview/dist/styles/iview.css';
+import iView from "iview";
+import "iview/dist/styles/iview.css";
 // 注册到Vue上
 Vue.use(iView);
 
 // 放大镜组件
-import ProductZoomer from 'vue-product-zoomer'
-Vue.use(ProductZoomer)
+import ProductZoomer from "vue-product-zoomer";
+Vue.use(ProductZoomer);
 
 // 导入 axios
 // 类似于 vue-resource this.$http
-import axios from 'axios'
+import axios from "axios";
 // 设置到Vue的原型上 那么所有Vue实例化出来的对象 和组件都能够共享这个属性
 // 一般来说 设置到原型上的 属性 Vue中 会使用$作为前缀 用来区分普通的属性
 Vue.prototype.$axios = axios;
 // 使用axios的方式设置基础地址
-axios.defaults.baseURL = 'http://111.230.232.110:8899/';
+axios.defaults.baseURL = "http://111.230.232.110:8899/";
 
 // 抽取基础地址
 // Vue.prototype.$baseUrl = 'http://111.230.232.110:8899/'
@@ -63,7 +63,7 @@ let routes = [
   {
     path: "/shopCart",
     component: shopCart
-  },
+  }
 ];
 
 // 实例化路由对象
@@ -73,7 +73,7 @@ let router = new VueRouter({
 
 // 注册全局过滤器 方便使用
 // 导入 moment
-import moment from 'moment';
+import moment from "moment";
 Vue.filter("shortTime", value => {
   //   console.log(value);
   // 处理时间数据
@@ -88,13 +88,9 @@ Vue.filter("shortTimePlus", value => {
   return moment(value).format("YYYY/MM/DD HH:mm:ss");
 });
 
-
-
-
 // Vuex的使用
-import Vuex from 'vuex'
-Vue.use(Vuex)
-
+import Vuex from "vuex";
+Vue.use(Vuex);
 
 // let data = JSON.parse(window.localStorage.getItem('hm24'));
 // if(!data){
@@ -110,22 +106,20 @@ const store = new Vuex.Store({
     // count: 0
     // 购物车数据对象
     // 短路运算 || 如果没有数据 左边的值是 false 去获取 || 右边的值
-    cartData:JSON.parse(window.localStorage.getItem('hm24'))||{
-      90:6,
-      84:7
-    }
+    cartData: JSON.parse(window.localStorage.getItem("hm24")) || {}
     // cartData:data
   },
   // Vuex的计算属性
-  getters:{
-    totalCount(state){
+  getters: {
+    totalCount(state) {
+      console.log(state);
       // 通过state 获取 内部的数据
       // 计算并返回
       // return 998;
       let num = 0;
       for (const key in state.cartData) {
         // 循环累加
-        num+=state.cartData[key]
+        num += state.cartData[key];
       }
       return num;
     }
@@ -144,35 +138,52 @@ const store = new Vuex.Store({
     // }
     // 往购物车添加数据的方法 2->two
     // 约定 对象的属性名  goodId(商品id)  goodNum(商品个数)
-    add2Cart(state,obj){
-      // console.log(obj);
+    add2Cart(state, obj) {
+      console.log(obj);
       // 商品已经存在{goodId:90,goodNum:6}
-      if(state.cartData[obj.goodId]!=undefined){
+      if (state.cartData[obj.goodId] != undefined) {
         // 累加即可 state.carData.goodId +=10
         // state.cartData[obj.goodId]+=obj.goodNum;
 
         // 上面代码的 扩写
         let oldNum = state.cartData[obj.goodId];
-        oldNum+=obj.goodNum;
-        state.cartData[obj.goodId]=oldNum;
-      }else{
+        oldNum += obj.goodNum;
+        state.cartData[obj.goodId] = oldNum;
+      } else {
         // 商品不存在
         // 动态增加键值对
         // state.cartData[obj.goodId] = obj.goodNum;
         // 如果是动态增加的属性 必须使用Vue.set才可以跟踪数据改变
         // 参数1 对象 参数2 添加的属性名 参数3 属性的值
-        Vue.set(state.cartData,obj.goodId,obj.goodNum)
+        Vue.set(state.cartData, obj.goodId, obj.goodNum);
       }
       // 打印内容
       console.log(state);
+    },
+    // 增加一个修改数据的方法
+    updateCartData(state, obj) {
+      // console.log(obj);
+      // 接收到数据直接赋值 因为 在03.shopCart.vue中 已经把数据处理好了
+      state.cartData = obj;
+    },
+    // 删除某一条数据的方法
+    // 已经被 watch中的代码 实现  只是为了 演示 Vue.delete这个方法
+    delGoodsById(state,id){
+      // console.log(id);
+      // 根据id 删除state中的数据
+      // delete state.cartData[id];
+      // delete 删除的属性 Vue无法跟踪
+      // 参数1 对象 参数2 删除的属性
+      // 必须使用Vue.delete才可以同步更新视图
+      Vue.delete(state.cartData,id)
     }
   }
-})
+});
 
 // 浏览器关闭保存数据
-window.onbeforeunload = function () {
-  window.localStorage.setItem('hm24',JSON.stringify(store.state.cartData))
-  }
+window.onbeforeunload = function() {
+  window.localStorage.setItem("hm24", JSON.stringify(store.state.cartData));
+};
 // 实例化Vue
 new Vue({
   render: h => h(App),

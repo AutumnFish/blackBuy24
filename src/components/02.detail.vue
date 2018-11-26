@@ -248,7 +248,7 @@ export default {
       // 放大镜数据
       images: {
         // required
-        normal_size: [
+        normal_size : [
         ]
       },
       // 放大镜的设置
@@ -367,6 +367,13 @@ export default {
             goodId:this.artID,
             goodNum:this.buyCount
         })
+        // 提示用户
+        this.$notify({
+          title: 'success',
+          message: '商品加入成功',
+          type: 'success',
+          duration:1000
+        });
     }
   },
   // 生命周期函数
