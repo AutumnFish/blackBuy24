@@ -19,12 +19,19 @@ Vue.use(iView);
 import ProductZoomer from "vue-product-zoomer";
 Vue.use(ProductZoomer);
 
+// 省市联动
+// 这种做法是 全局注册 一般是多个组件需要使用 才这么做
+// import Distpicker from 'v-distpicker'
+// Vue.component('v-distpicker', Distpicker)
+
 // 导入 axios
 // 类似于 vue-resource this.$http
 import axios from "axios";
 // 设置到Vue的原型上 那么所有Vue实例化出来的对象 和组件都能够共享这个属性
 // 一般来说 设置到原型上的 属性 Vue中 会使用$作为前缀 用来区分普通的属性
 Vue.prototype.$axios = axios;
+// 设置带上cookie
+axios.defaults.withCredentials = true; //让ajax携带cookie
 // 使用axios的方式设置基础地址
 axios.defaults.baseURL = "http://111.230.232.110:8899/";
 
@@ -43,6 +50,7 @@ import index from "./components/index.vue";
 import detail from "./components/02.detail.vue";
 import shopCart from "./components/03.shopCart.vue";
 import order from "./components/04.order.vue";
+import login from "./components/05.login.vue";
 
 // 写路由规则
 let routes = [
@@ -66,9 +74,15 @@ let routes = [
     component: shopCart
   },
   // 去订单确认页面
+  // 动态路由匹配
   {
-    path: "/order",
+    path: "/order/:ids",
     component: order
+  },
+  // 去订单确认页面
+  {
+    path: "/login",
+    component: login
   }
 ];
 
@@ -79,19 +93,22 @@ let router = new VueRouter({
 
 // 增加导航守卫 回调函数(每次路由改变的时候 触发)
 router.beforeEach((to, from, next) => {
-  console.log("守卫啦!!!!");
+  // console.log("守卫啦!!!!");
   // console.log(to);
-  // console.log(from);
-  if (to.path == "/order") {
+  console.log(from);
+  if (to.path.indexOf('/order')!=-1) {
     // 正要去订单页
     // 必须先判断登录
     axios.get("site/account/islogin").then(result => {
-      //   console.log(result);
+      console.log(result);
       if (result.data.code == "nologin") {
         // 提示用户
         Vue.prototype.$Message.warning("请先登录");
-        // 跳转页面(路由)
-        router.push("/index");
+        // 跳转页面(路由) 登录页面 编程式导航
+        router.push("/login");
+      } else {
+        // 如果登录成功啦
+        next();
       }
     });
   } else {
@@ -135,8 +152,12 @@ const store = new Vuex.Store({
     // count: 0
     // 购物车数据对象
     // 短路运算 || 如果没有数据 左边的值是 false 去获取 || 右边的值
-    cartData: JSON.parse(window.localStorage.getItem("hm24")) || {}
-    // cartData:data
+    cartData: JSON.parse(window.localStorage.getItem("hm24")) || {},
+    // cartData:data,
+    // 是否登录的字段
+    isLogin: false
+    // 记录来时的地址
+    // fromPath:''
   },
   // Vuex的计算属性
   getters: {
@@ -205,6 +226,10 @@ const store = new Vuex.Store({
       // 参数1 对象 参数2 删除的属性
       // 必须使用Vue.delete才可以同步更新视图
       Vue.delete(state.cartData, id);
+    },
+    // 修改登录状态
+    changeLogin(state, isLogin) {
+      state.isLogin = isLogin;
     }
   }
 });
@@ -213,11 +238,32 @@ const store = new Vuex.Store({
 window.onbeforeunload = function() {
   window.localStorage.setItem("hm24", JSON.stringify(store.state.cartData));
 };
+// window.onload = function() {};
 // 实例化Vue
 new Vue({
   render: h => h(App),
   // 传入路由对象
   router,
   // 需要把store传递给 Vue实例 这样在子组件中才可以使用$store
-  store
+  store,
+  // 生命周期函数
+  created() {
+    // console.log('最顶级的被创建了');
+    // 调用登录判断接口
+    // 根据结果判断是否登录
+    axios.get("site/account/islogin").then(result => {
+      console.log(result);
+      if (result.data.code == "nologin") {
+        // 提示用户
+        Vue.prototype.$Message.warning("请先登录");
+        // 跳转页面(路由) 登录页面 编程式导航
+        router.push("/login");
+      } else {
+        // 修改仓库中的状态
+        store.state.isLogin = true;
+        // 如果登录成功啦
+        // next();
+      }
+    });
+  }
 }).$mount("#app");
