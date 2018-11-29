@@ -48,43 +48,44 @@
 </template>
 <script>
 export default {
-    name:'login',
-    data:function(){
-      return {
-        user_name:'',
-        password:''
-      }
-    },
-    methods:{
-      // 登录
-      login(){
-        // 非空判断
-        if(this.user_name==''||this.password==''){
-          this.$Message.warning('哥们,你还有内容没有写哦!记得呀!');
-        }else{
-          // 调用接口
-          this.$axios.post('site/account/login',{
-            user_name:this.user_name,
-            password:this.password
-          }).then(result=>{
+  name: "login",
+  data: function() {
+    return {
+      user_name: "",
+      password: ""
+    };
+  },
+  methods: {
+    // 登录
+    login() {
+      // 非空判断
+      if (this.user_name == "" || this.password == "") {
+        this.$Message.warning("哥们,你还有内容没有写哦!记得呀!");
+      } else {
+        // 调用接口
+        this.$axios
+          .post("site/account/login", {
+            user_name: this.user_name,
+            password: this.password
+          })
+          .then(result => {
             console.log(result);
-            if(result.data.status===0){
+            if (result.data.status === 0) {
               // 登录成功
               this.$Message.success(result.data.message);
               // 修改Vuex中的登录字段
-              this.$store.commit('changeLogin',true);
+              this.$store.commit("changeLogin", true);
               // 从哪来回哪去
               this.$router.go(-1);
-            }else{
+            } else {
               // 登录失败
               this.$Message.error(result.data.message);
             }
-          })
-        }
+          });
       }
     }
-}
+  }
+};
 </script>
 <style >
-    
 </style>

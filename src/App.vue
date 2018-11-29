@@ -20,7 +20,9 @@
             </span>
             <!-- 登录了显示 -->
             <span v-show="$store.state.isLogin==true">
-              <a href class>会员中心</a>
+              <!-- <a href class> -->
+              <router-link to="/vipCenter">会员中心</router-link>
+              <!-- </a> -->
               <strong>|</strong>
               <a @click="logout">退出</a>
               <strong>|</strong>
@@ -137,20 +139,20 @@ export default {
     console.log(this.$store.state.count);
   },
   // 事件
-  methods:{
-      logout(){
-          // 调用登出接口即可
-          this.$axios.get('site/account/logout').then(result=>{
-            //   console.log(result);
-            if(result.data.status===0){
-                this.$Message.success(result.data.message);
-                // 编程式导航 去首页
-                this.$router.push('/index');
-                // 修改Vuex中的 登录字段 为false
-                this.$store.commit('changeLogin',false);
-            }
-          })
-      }
+  methods: {
+    logout() {
+      // 调用登出接口即可
+      this.$axios.get("site/account/logout").then(result => {
+        //   console.log(result);
+        if (result.data.status === 0) {
+          this.$Message.success(result.data.message);
+          // 编程式导航 去首页
+          this.$router.push("/index");
+          // 修改Vuex中的 登录字段 为false
+          this.$store.commit("changeLogin", false);
+        }
+      });
+    }
   }
 };
 </script>

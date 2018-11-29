@@ -51,6 +51,9 @@ import detail from "./components/02.detail.vue";
 import shopCart from "./components/03.shopCart.vue";
 import order from "./components/04.order.vue";
 import login from "./components/05.login.vue";
+import payMoney from "./components/06.payMoney.vue";
+import paySuccess from "./components/07.paySuccess.vue";
+import vipCenter from "./components/08.vipCenter.vue";
 
 // 写路由规则
 let routes = [
@@ -77,12 +80,53 @@ let routes = [
   // 动态路由匹配
   {
     path: "/order/:ids",
-    component: order
+    component: order,
+    // meta 是固定
+    meta: {
+      // 这里的字段可以随意添加
+      // isLogin: true,
+      // weather: "棒棒哒",
+      // wendu: "25℃"
+      checkLogin: true
+    }
   },
   // 去订单确认页面
   {
     path: "/login",
     component: login
+  },
+  // 订单详情 付钱页面
+  {
+    path: "/payMoney/:orderId",
+    component: payMoney,
+    // meta 是固定
+    meta: {
+      // 这里的字段可以随意添加
+      // isLogin: true,
+      // weather: "棒棒哒",
+      // wendu: "25℃"
+      checkLogin: true
+    }
+  },
+  // 支付成功页
+  {
+    path: "/paySuccess",
+    component: paySuccess,
+    // meta 是固定
+    meta: {
+      // 这里的字段可以随意添加
+      checkLogin: true
+    }
+  },
+  // 会员中心
+  {
+    path: "/vipCenter",
+    component: vipCenter,
+    // meta 是固定
+    meta: {
+      // 这里的字段可以随意添加
+      checkLogin: true
+    }
   }
 ];
 
@@ -94,9 +138,13 @@ let router = new VueRouter({
 // 增加导航守卫 回调函数(每次路由改变的时候 触发)
 router.beforeEach((to, from, next) => {
   // console.log("守卫啦!!!!");
-  // console.log(to);
-  console.log(from);
-  if (to.path.indexOf('/order')!=-1) {
+  console.log(to);
+  // console.log(from);
+  // if (to.path=='/order') {
+  // if (to.path.indexOf("/order") != -1) {
+  // 使用路由元信息 对需要登录判断的路由组件进行修饰 如果有这个字段 就需要登录 没有 直接放行
+  // 一般使用路由元信息 结合导航守卫 实现组件的访问判断 通过额外的增加字段 为 路由增加一些不同的信息
+  if (to.meta.checkLogin == true) {
     // 正要去订单页
     // 必须先判断登录
     axios.get("site/account/islogin").then(result => {
