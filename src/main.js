@@ -54,6 +54,9 @@ import login from "./components/05.login.vue";
 import payMoney from "./components/06.payMoney.vue";
 import paySuccess from "./components/07.paySuccess.vue";
 import vipCenter from "./components/08.vipCenter.vue";
+import orderList from "./components/09.orderList.vue";
+import orderDetail from "./components/10.orderDetail.vue";
+import orderIndex from "./components/11.index.vue";
 
 // 写路由规则
 let routes = [
@@ -126,7 +129,29 @@ let routes = [
     meta: {
       // 这里的字段可以随意添加
       checkLogin: true
-    }
+    },
+    // 嵌套路由
+    children:[
+      {
+        path:'',
+        redirect:'index'
+      },
+      {
+        // /vipCenter/index
+        path:'index',
+        component:orderIndex
+      },
+      {
+        // /vipCenter/orderList
+        path:'orderList',
+        component:orderList
+      },
+      {
+        // /vipCenter/orderDetail
+        path:'orderDetail',
+        component:orderDetail
+      },
+    ]
   }
 ];
 
