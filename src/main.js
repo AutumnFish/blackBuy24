@@ -206,6 +206,10 @@ Vue.filter("shortTimePlus", value => {
   //   return '😁😁😁😁😁😁';
   return moment(value).format("YYYY/MM/DD HH:mm:ss");
 });
+Vue.filter("addSmlie", value => {
+  //   return '😁😁😁😁😁😁';
+  return value+' 😍'
+});
 
 // Vuex的使用
 import Vuex from "vuex";
