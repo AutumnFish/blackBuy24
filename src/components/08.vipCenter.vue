@@ -7,15 +7,20 @@
             <div class="location">
               <span>当前位置：</span>
               <a href="/index.html">首页</a> &gt;
-              <a href="/user/center/index.html">会员中心</a>
+              <a href="/user/center/index.html">会员中心</a>&gt;
+              <a href="/user/center/index.html">{{currentName}}</a>
             </div>
           </div>
           <div class="section clearfix">
             <div class="left-260">
               <div class="bg-wrap">
                 <div class="avatar-box">
-                  <a
+                  <!-- <a
                     href="/user/center/avatar.html"
+                  
+                  > -->
+                  <router-link
+                    to="/vipCenter/index"
                     class="img-box"
                   >
                     <!-- <i class="iconfont icon-user-full"></i> -->
@@ -23,7 +28,9 @@
                       src="../assets/coolMan2.png"
                       alt=""
                     >
-                  </a>
+                  </router-link>
+
+                  <!-- </a> -->
                   <h3>ivanyb</h3>
                   <p>
                     <b>注册会员</b>
@@ -103,6 +110,12 @@
 <script>
 export default {
   name: "vipCenter",
+  // 数据
+  data: function() {
+    return {
+      currentName: ""
+    };
+  },
   methods: {
     // 退出
     logout() {
@@ -120,7 +133,7 @@ export default {
           // });
           // 调用登出接口即可
           this.$axios.get("site/account/logout").then(result => {
-            //   console.log(result);
+            //   //console.log(result);
             if (result.data.status === 0) {
               this.$Message.success(result.data.message);
               // 编程式导航 去首页
@@ -138,6 +151,17 @@ export default {
           });
         });
     }
+  },
+  // 使用侦听器
+  watch: {
+    $route(val, oldVal) {
+      // //console.log(val);
+      this.currentName = this.$route.meta.currentName;
+    }
+  },
+  created() {
+    // //console.log(this.$route);
+    this.currentName = this.$route.meta.currentName;
   }
 };
 </script>

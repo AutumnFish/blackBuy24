@@ -139,17 +139,26 @@ let routes = [
       {
         // /vipCenter/index
         path:'index',
-        component:orderIndex
+        component:orderIndex,
+        meta:{
+          currentName:'中心首页'
+        }
       },
       {
         // /vipCenter/orderList
         path:'orderList',
-        component:orderList
+        component:orderList,
+        meta:{
+          currentName:'订单列表'
+        }
       },
       {
         // /vipCenter/orderDetail
-        path:'orderDetail',
-        component:orderDetail
+        path:'orderDetail/:orderId',
+        component:orderDetail,
+        meta:{
+          currentName:'订单详情'
+        }
       },
     ]
   }
@@ -157,14 +166,22 @@ let routes = [
 
 // 实例化路由对象
 let router = new VueRouter({
-  routes
+  routes,
+  // 专门用来处理滚动的参数
+  // 路由的 滚动行为中 的一个参数
+  scrollBehavior (to, from, savedPosition) {
+    // return 期望滚动到哪个的位置
+    return { x: 0, y: 0 }
+  },
+  // 去除#
+  mode: 'history'
 });
 
 // 增加导航守卫 回调函数(每次路由改变的时候 触发)
 router.beforeEach((to, from, next) => {
-  // console.log("守卫啦!!!!");
-  console.log(to);
-  // console.log(from);
+  // //console.log("守卫啦!!!!");
+  //console.log(to);
+  // //console.log(from);
   // if (to.path=='/order') {
   // if (to.path.indexOf("/order") != -1) {
   // 使用路由元信息 对需要登录判断的路由组件进行修饰 如果有这个字段 就需要登录 没有 直接放行
@@ -173,7 +190,7 @@ router.beforeEach((to, from, next) => {
     // 正要去订单页
     // 必须先判断登录
     axios.get("site/account/islogin").then(result => {
-      console.log(result);
+      //console.log(result);
       if (result.data.code == "nologin") {
         // 提示用户
         Vue.prototype.$Message.warning("请先登录");
@@ -189,16 +206,22 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+// // 路由跳转完毕触发
+// 这种方法 是使用导航守卫的 回调函数实现 
+// router.afterEach((to, from) => {
+//   // 页面滚到顶部即可
+//   window.scrollTo(0,0);
+// })
 
 // 注册全局过滤器 方便使用
 // 导入 moment
 import moment from "moment";
 Vue.filter("shortTime", value => {
-  //   console.log(value);
+  //   //console.log(value);
   // 处理时间数据
   // 返回处理之后的数据
   // 要显示什么 就返回什么
-  console.log(moment(value).format("YYYY😘MM😘DD👍"));
+  //console.log(moment(value).format("YYYY😘MM😘DD👍"));
   //   return '😁😁😁😁😁😁';
   return moment(value).format("YYYY🚲MM🚲DD🚲");
 });
@@ -206,9 +229,11 @@ Vue.filter("shortTimePlus", value => {
   //   return '😁😁😁😁😁😁';
   return moment(value).format("YYYY/MM/DD HH:mm:ss");
 });
-Vue.filter("addSmlie", value => {
+// 增加笑脸的过滤器
+Vue.filter("addSmlie", (value,smileType) => {
   //   return '😁😁😁😁😁😁';
-  return value+' 😍'
+  // 使用传递进来的笑脸
+  return value+smileType;
 });
 
 // Vuex的使用
@@ -239,7 +264,7 @@ const store = new Vuex.Store({
   // Vuex的计算属性
   getters: {
     totalCount(state) {
-      console.log(state);
+      //console.log(state);
       // 通过state 获取 内部的数据
       // 计算并返回
       // return 998;
@@ -257,16 +282,16 @@ const store = new Vuex.Store({
     // state就是 上面的 数据 state
     // 测试用方法
     // increment (state,obj) {
-    //   console.log('触发了')
-    //   console.log(state);
-    //   console.log(obj);
+    //   //console.log('触发了')
+    //   //console.log(state);
+    //   //console.log(obj);
     //   // state.count+=n
     //   // state.count+=m;
     // }
     // 往购物车添加数据的方法 2->two
     // 约定 对象的属性名  goodId(商品id)  goodNum(商品个数)
     add2Cart(state, obj) {
-      console.log(obj);
+      //console.log(obj);
       // 商品已经存在{goodId:90,goodNum:6}
       if (state.cartData[obj.goodId] != undefined) {
         // 累加即可 state.carData.goodId +=10
@@ -285,18 +310,18 @@ const store = new Vuex.Store({
         Vue.set(state.cartData, obj.goodId, obj.goodNum);
       }
       // 打印内容
-      console.log(state);
+      //console.log(state);
     },
     // 增加一个修改数据的方法
     updateCartData(state, obj) {
-      // console.log(obj);
+      // //console.log(obj);
       // 接收到数据直接赋值 因为 在03.shopCart.vue中 已经把数据处理好了
       state.cartData = obj;
     },
     // 删除某一条数据的方法
     // 已经被 watch中的代码 实现  只是为了 演示 Vue.delete这个方法
     delGoodsById(state, id) {
-      // console.log(id);
+      // //console.log(id);
       // 根据id 删除state中的数据
       // delete state.cartData[id];
       // delete 删除的属性 Vue无法跟踪
@@ -325,11 +350,11 @@ new Vue({
   store,
   // 生命周期函数
   created() {
-    // console.log('最顶级的被创建了');
+    // //console.log('最顶级的被创建了');
     // 调用登录判断接口
     // 根据结果判断是否登录
     axios.get("site/account/islogin").then(result => {
-      console.log(result);
+      //console.log(result);
       if (result.data.code == "nologin") {
         // 提示用户
         Vue.prototype.$Message.warning("请先登录");
